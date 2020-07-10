@@ -198,7 +198,7 @@ main {
   flex-wrap: wrap;
 }
 
-.trash {
+.trash-notes {
   display: none;
   margin: 30px;
   flex-wrap: wrap;
