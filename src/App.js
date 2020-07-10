@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import logo from "./images/logo.png";
 import trashIcon from "./images/icons/trash.svg";
 import bracesIcon from "./images/icons/code.svg";
 import paletteIcon from "./images/icons/color-picker.svg";
-import recoveryIcon from "./images/icons/restore.svg"
-import { getNotes, createNote, updateNote, deleteNote } from "../src/api"
+import recoveryIcon from "./images/icons/restore.svg";
+import { getNotes, createNote, updateNote, deleteNote } from "../src/api";
 
 function Header() {
   return (
@@ -16,15 +16,25 @@ function Header() {
   );
 }
 
-function Navbar({setSection}) {
+function Navbar({ setSection }) {
   return (
     <nav className="navbar">
       <ul className="nav-list">
-        <li className="nav-item active" onClick={() => {setSection(null)}}>
+        <li
+          className="nav-item active"
+          onClick={() => {
+            setSection(null);
+          }}
+        >
           <img src={bracesIcon} alt="curly braces" />
           <span>Notes</span>
         </li>
-        <li className="nav-item" onClick={() => {setSection("trash")}}>
+        <li
+          className="nav-item"
+          onClick={() => {
+            setSection("trash");
+          }}
+        >
           <img src={trashIcon} alt="trash icon" />
           <span>Trash</span>
         </li>
@@ -33,11 +43,54 @@ function Navbar({setSection}) {
   );
 }
 
-function NewNoteForm() {
+function NewNoteForm({ setNotes, notes }) {
+  console.log(notes);
+  const [formData, setFormData] = useState({
+    title: "",
+    body: "",
+    color: "white",
+  });
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    addNote(formData);
+  }
+
+  async function addNote(formData) {
+    try {
+      const newNote = await createNote(formData);
+      setNotes([...notes, newNote]);
+    } catch (e) {
+      alert("There as a problem requiring the comments. Please try again");
+    }
+  }
+
+  console.log(formData);
+
   return (
-    <form id="new-note" className="new-note-form">
-      <input type="text" placeholder="Title" className="new-note-input" />
-      <input type="text" placeholder="Take a note" className="new-note-input" />
+    <form id="new-note" className="new-note-form" onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder="Title"
+        className="new-note-input"
+        name="title"
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        placeholder="Take a note"
+        className="new-note-input"
+        name="body"
+        onChange={handleChange}
+      />
       <div className="form-bot">
         <div className="colors-wrapper hidden">
           <div className="color blanco" data-color="#FFFFFF"></div>
@@ -58,7 +111,7 @@ function NewNoteForm() {
   );
 }
 
-function Note({item}) {
+function Note({ item }) {
   return (
     <div className="card">
       <div>
@@ -66,33 +119,45 @@ function Note({item}) {
         <p className="card-text">{item.body}</p>
       </div>
       <div className="card-bottom">
-        <img src={paletteIcon} alt="palette" className={item.deleted_at === null ? "icon-paleta" : "hidden"} />
+        <img
+          src={paletteIcon}
+          alt="palette"
+          className={item.deleted_at === null ? "icon-paleta" : "hidden"}
+        />
         <img src={trashIcon} alt="trash" />
-        <img src={recoveryIcon} className={item.deleted_at === null ? "hidden" : ""} alt="recover" />
+        <img
+          src={recoveryIcon}
+          className={item.deleted_at === null ? "hidden" : ""}
+          alt="recover"
+        />
       </div>
     </div>
   );
 }
 
-function NotesList({section, notes}) {
+function NotesList({ section, notes }) {
   return (
     <div className="saved-notes">
-      { notes.length === 0 ? (
+      {notes.length === 0 ? (
         <div className="no-saved-notes hidden">
           <p>Notes you add appear here</p>
         </div>
-        ) :
-        (notes.filter(note => typeof(note.deleted_at) === typeof(section)).map( item => ( <Note item={item}/>)))  
-      }
+      ) : (
+        notes
+          .filter((note) => typeof note.deleted_at === typeof section)
+          .map((item) => <Note item={item} />)
+      )}
     </div>
   );
 }
 
-function SavedNotes({section, notes}) {
+function SavedNotes({ section, notes, setNotes }) {
   return (
     <div className="notes">
-      {section === null ? <NewNoteForm /> : null}
-      <NotesList section={section} notes={notes}/>
+      {section === null ? (
+        <NewNoteForm setNotes={setNotes} notes={notes} />
+      ) : null}
+      <NotesList section={section} notes={notes} />
     </div>
   );
 }
@@ -106,14 +171,11 @@ function App() {
     <div>
       <Header />
       <main>
-        <Navbar  setSection={setSection}/>
-        <SavedNotes setNotes={setNotes} section={section} notes={notes}/>
+        <Navbar setSection={setSection} />
+        <SavedNotes section={section} notes={notes} setNotes={setNotes} />
       </main>
     </div>
   );
 }
 
 export default App;
-
-
-
