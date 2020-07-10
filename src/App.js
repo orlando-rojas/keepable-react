@@ -4,6 +4,7 @@ import logo from "./images/logo.png";
 import trashIcon from "./images/icons/trash.svg";
 import bracesIcon from "./images/icons/code.svg";
 import paleteIcon from "./images/icons/color-picker.svg";
+import recoveryIcon from "./images/icons/restore.svg"
 import { getNotes, createNote, updateNote, deleteNote } from "../src/api"
 
 function Header() {
@@ -15,15 +16,15 @@ function Header() {
   );
 }
 
-function Navbar({handleChangeSection}) {
+function Navbar({setSection}) {
   return (
     <nav className="navbar">
       <ul className="nav-list">
-        <li className="nav-item active" onClick={handleChangeSection}>
+        <li className="nav-item active" onClick={() => {setSection(null)}}>
           <img src={bracesIcon} alt="curly braces" />
           <span>Notes</span>
         </li>
-        <li className="nav-item" onClick={handleChangeSection}>
+        <li className="nav-item" onClick={() => {setSection("trash")}}>
           <img src={trashIcon} alt="trash icon" />
           <span>Trash</span>
         </li>
@@ -57,17 +58,17 @@ function NewNoteForm() {
   );
 }
 
-function Note({note}) {
+function Note({item}) {
   return (
     <div className="card">
       <div>
-        <h3 className="card-title">learn react</h3>
-        <p className="card-text">This is the body for the note.</p>
+        <h3 className="card-title">{item.title}</h3>
+        <p className="card-text">{item.body}</p>
       </div>
       <div className="card-bottom">
-        <img src={paleteIcon} alt="#" className="icon-paleta" />
+        <img src={paleteIcon} alt="#" className={item.deleted_at === null ? "icon-paleta" : "hidden"} />
         <img src={trashIcon} alt="#" />
-        <img src="images/icon-recover.svg" className="hidden" alt="#" />
+        <img src={recoveryIcon} className={item.deleted_at === null ? "hidden" : ""} alt="#" />
       </div>
     </div>
   );
@@ -81,7 +82,7 @@ function NotesList({section, notes}) {
           <p>Notes you add appear here</p>
         </div>
         ) :
-        notes.filter((note) => typeof(note.deleted_at) === typeof(section) ? <Note note={note}/> : null)  
+        (notes.filter(note => typeof(note.deleted_at) === typeof(section)).map( item => ( <Note item={item}/>)))  
       }
     </div>
   );
@@ -90,7 +91,7 @@ function NotesList({section, notes}) {
 function SavedNotes({section, notes}) {
   return (
     <div className="notes">
-      {section ? <NewNoteForm /> : null}
+      {section === null ? <NewNoteForm /> : null}
       <NotesList section={section} notes={notes}/>
     </div>
   );
@@ -98,32 +99,27 @@ function SavedNotes({section, notes}) {
 function App() {
   const [section, setSection] = useState(null);
   const [notes, setNotes] = useState([{"id": 10,
-    "title": "Sugar",
-    "body": "Alias nisi quod.\nId quam odio.\nEt enim quam.",
+    "title": "dddddd",
+    "body": "gaaaaaa",
     "color": "green",
     "pinned": false,
     "deleted_at": null,
     "created_at": "2020-07-09T21:41:50.066Z",
     "updated_at": "2020-07-09T21:41:50.066Z"}, {"id": 10,
-    "title": "Sugar",
-    "body": "Alias nisi quod.\nId quam odio.\nEt enim quam.",
+    "title": "eeeee",
+    "body": "test.\nzzzz.\nzzzz.",
     "color": "green",
     "pinned": false,
-    "deleted_at": null,
+    "deleted_at": "2020-07-09T21:41:50.066Z",
     "created_at": "2020-07-09T21:41:50.066Z",
     "updated_at": "2020-07-09T21:41:50.066Z"}]);
 
-  function handleChangeSection() {
-    setSection(section === null ? "true" : null);
-  }
-
-
-
+  
   return (
     <div>
       <Header />
       <main>
-        <Navbar  handleChangeSection={handleChangeSection}/>
+        <Navbar  setSection={setSection}/>
         <SavedNotes setNotes={setNotes} section={section} notes={notes}/>
       </main>
     </div>
