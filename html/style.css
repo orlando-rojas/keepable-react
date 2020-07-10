@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
-
 * {
   margin: 0;
   padding: 0;
@@ -26,8 +24,15 @@ header {
   border-bottom: 2px solid #d1d1d1;
 }
 
-.keepable-logo {
-  height: 24px;
+.keepable-title {
+  font-weight: bold;
+  font-size: 29px;
+  line-height: 24px;
+  color: #fff;
+}
+
+.keepable-title span {
+  color: #999b9e;
 }
 
 .welcome-msg {
@@ -39,6 +44,10 @@ header {
   margin-left: 117px;
 }
 
+.weather {
+  font-weight: lighter;
+}
+
 main {
   display: flex;
   min-width: auto;
@@ -46,7 +55,7 @@ main {
 
 .navbar {
   padding-top: 10px;
-  max-width: 280px;
+  width: 280px;
   min-height: 100vh;
   height: auto;
   border-right: 2px solid #d1d1d1;
@@ -93,10 +102,9 @@ main {
   background: #ffffff;
   box-shadow: 5px 5px 15px rgba(153, 155, 158, 0.85);
   border-radius: 8px;
-  padding: 20px 20px 20px 20px;
 }
 
-.card-bottom {
+.card-b {
   position: relative;
   display: flex;
   flex-wrap: wrap;
@@ -107,9 +115,10 @@ main {
 
 .new-note-input {
   border: none;
-  margin-bottom: 10px;
-  height: 20px;
-  width: 100%;
+  margin: 20px 20px 30px 20px;
+
+  padding: 5px;
+  width: 90%;
 }
 
 .new-note-input::placeholder {
@@ -122,9 +131,8 @@ main {
 .form-bot {
   width: 100%;
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
-  margin-top: 29px;
+  padding: 25px;
 }
 
 .btn-keep-it {
@@ -146,31 +154,11 @@ main {
   box-shadow: 5px 5px 15px rgba(153, 155, 158, 0.85);
   border-radius: 8px;
   padding: 20px;
-  padding-bottom: 2px;
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
   justify-content: space-between;
   word-break: break-all;
-  background-color: #fff;
-}
-
-.icon-wrapper {
-  height: 36px;
-  width: 36px;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.card-title {
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0.25px;
-  margin-bottom: 10px;
 }
 
 .card-text {
@@ -205,6 +193,7 @@ main {
 }
 
 .no-saved-notes {
+  display: none;
   font-weight: bold;
   max-width: 280px;
   font-size: 36px;
@@ -215,8 +204,11 @@ main {
   margin: 0 auto;
 }
 
+.card-body {
+}
+
 .colors-wrapper {
-  background-color: #fff;
+  background-color: whitesmoke;
   height: 65px;
   width: 155px;
   display: flex;
@@ -225,8 +217,11 @@ main {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 8px;
   position: absolute;
-  bottom: 30px;
-  left: -60px;
+  bottom: 0;
+}
+
+.colors-wrapper:nth-child(1) {
+  bottom: 45px;
 }
 
 .yellow {
@@ -236,6 +231,7 @@ main {
 .color {
   height: 25px;
   width: 25px;
+  background-color: white;
   border-radius: 50%;
   margin-right: 4px;
 }
