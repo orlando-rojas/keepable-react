@@ -1,9 +1,11 @@
-import React from "react";
+import React, {useState} from "react";
 import "./App.css";
 import logo from "./images/logo.png";
 import trashIcon from "./images/icons/trash.svg";
 import bracesIcon from "./images/icons/code.svg";
 import paleteIcon from "./images/icons/color-picker.svg";
+import recoveryIcon from "./images/icons/restore.svg"
+import { getNotes, createNote, updateNote, deleteNote } from "../src/api"
 
 function Header() {
   return (
@@ -14,15 +16,15 @@ function Header() {
   );
 }
 
-function Navbar() {
+function Navbar({setSection}) {
   return (
     <nav className="navbar">
       <ul className="nav-list">
-        <li className="nav-item active">
+        <li className="nav-item active" onClick={() => {setSection(null)}}>
           <img src={bracesIcon} alt="curly braces" />
           <span>Notes</span>
         </li>
-        <li className="nav-item">
+        <li className="nav-item" onClick={() => {setSection("trash")}}>
           <img src={trashIcon} alt="trash icon" />
           <span>Trash</span>
         </li>
@@ -56,65 +58,73 @@ function NewNoteForm() {
   );
 }
 
-function Note() {
+function Note({item}) {
   return (
     <div className="card">
       <div>
-        <h3 className="card-title">learn react</h3>
-        <p className="card-text">This is the body for the note.</p>
+        <h3 className="card-title">{item.title}</h3>
+        <p className="card-text">{item.body}</p>
       </div>
       <div className="card-bottom">
-        <div className="colors-wrapper hidden">
-          <div className="color blanco" data-color="#FFFFFF"></div>
-          <div className="color coral" data-color="#F28B82"></div>
-          <div className="color mostaza" data-color="#FBBC04"></div>
-          <div className="color amarillo" data-color="#FFF475"></div>
-          <div className="color verde" data-color="#CCFF90"></div>
-          <div className="color turquesa" data-color="#A7FFEB"></div>
-          <div className="color celeste" data-color="#CBF0F8"></div>
-          <div className="color azul" data-color="#AECBFA"></div>
-          <div className="color morado" data-color="#D7AEFB"></div>
-          <div className="color rosado" data-color="#FDCFE8"></div>
-        </div>
-        <div className="icon-wrapper">
-          <img src={paleteIcon} alt="#" className="icon-paleta" />
-        </div>
+        <img src={paleteIcon} alt="#" className={item.deleted_at === null ? "icon-paleta" : "hidden"} />
         <img src={trashIcon} alt="#" />
-        <img src="images/icon-recover.svg" className="hidden" alt="#" />
+        <img src={recoveryIcon} className={item.deleted_at === null ? "hidden" : ""} alt="#" />
       </div>
     </div>
   );
 }
 
-function NotesList() {
+function NotesList({section, notes}) {
   return (
-    <div id="saved-notes" className="saved-notes">
-      <div className="no-saved-notes hidden">
-        <p>Notes you add appear here</p>
-      </div>
-      <Note />
+    <div className="saved-notes">
+      { notes.length === 0 ? (
+        <div className="no-saved-notes hidden">
+          <p>Notes you add appear here</p>
+        </div>
+        ) :
+        (notes.filter(note => typeof(note.deleted_at) === typeof(section)).map( item => ( <Note item={item}/>)))  
+      }
     </div>
   );
 }
 
-function SavedNotes() {
+function SavedNotes({section, notes}) {
   return (
     <div className="notes">
-      <NewNoteForm />
-      <NotesList />
+      {section === null ? <NewNoteForm /> : null}
+      <NotesList section={section} notes={notes}/>
     </div>
   );
 }
 function App() {
+  const [section, setSection] = useState(null);
+  const [notes, setNotes] = useState([{"id": 10,
+    "title": "dddddd",
+    "body": "gaaaaaa",
+    "color": "green",
+    "pinned": false,
+    "deleted_at": null,
+    "created_at": "2020-07-09T21:41:50.066Z",
+    "updated_at": "2020-07-09T21:41:50.066Z"}, {"id": 10,
+    "title": "eeeee",
+    "body": "test.\nzzzz.\nzzzz.",
+    "color": "green",
+    "pinned": false,
+    "deleted_at": "2020-07-09T21:41:50.066Z",
+    "created_at": "2020-07-09T21:41:50.066Z",
+    "updated_at": "2020-07-09T21:41:50.066Z"}]);
+
+  
   return (
     <div>
       <Header />
       <main>
-        <Navbar />
-        <SavedNotes />
+        <Navbar  setSection={setSection}/>
+        <SavedNotes setNotes={setNotes} section={section} notes={notes}/>
       </main>
     </div>
   );
 }
 
 export default App;
+
