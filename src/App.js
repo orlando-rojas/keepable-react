@@ -1,9 +1,9 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import "./App.css";
 import logo from "./images/logo.png";
 import trashIcon from "./images/icons/trash.svg";
 import bracesIcon from "./images/icons/code.svg";
-import paleteIcon from "./images/icons/color-picker.svg";
+import paletteIcon from "./images/icons/color-picker.svg";
 import recoveryIcon from "./images/icons/restore.svg"
 import { getNotes, createNote, updateNote, deleteNote } from "../src/api"
 
@@ -51,7 +51,7 @@ function NewNoteForm() {
           <div className="color morado" data-color="#D7AEFB"></div>
           <div className="color rosado" data-color="#FDCFE8"></div>
         </div>
-        <img src={paleteIcon} alt="color picker" className="icon-paleta" />
+        <img src={paletteIcon} alt="color picker" className="icon-paleta" />
         <input type="submit" value="Keep it!" className="btn-keep-it" />
       </div>
     </form>
@@ -66,9 +66,9 @@ function Note({item}) {
         <p className="card-text">{item.body}</p>
       </div>
       <div className="card-bottom">
-        <img src={paleteIcon} alt="#" className={item.deleted_at === null ? "icon-paleta" : "hidden"} />
-        <img src={trashIcon} alt="#" />
-        <img src={recoveryIcon} className={item.deleted_at === null ? "hidden" : ""} alt="#" />
+        <img src={paletteIcon} alt="palette" className={item.deleted_at === null ? "icon-paleta" : "hidden"} />
+        <img src={trashIcon} alt="trash" />
+        <img src={recoveryIcon} className={item.deleted_at === null ? "hidden" : ""} alt="recover" />
       </div>
     </div>
   );
@@ -98,23 +98,10 @@ function SavedNotes({section, notes}) {
 }
 function App() {
   const [section, setSection] = useState(null);
-  const [notes, setNotes] = useState([{"id": 10,
-    "title": "dddddd",
-    "body": "gaaaaaa",
-    "color": "green",
-    "pinned": false,
-    "deleted_at": null,
-    "created_at": "2020-07-09T21:41:50.066Z",
-    "updated_at": "2020-07-09T21:41:50.066Z"}, {"id": 10,
-    "title": "eeeee",
-    "body": "test.\nzzzz.\nzzzz.",
-    "color": "green",
-    "pinned": false,
-    "deleted_at": "2020-07-09T21:41:50.066Z",
-    "created_at": "2020-07-09T21:41:50.066Z",
-    "updated_at": "2020-07-09T21:41:50.066Z"}]);
+  const [notes, setNotes] = useState([]);
 
-  
+  useEffect(() => getNotes().then((notes) => setNotes(notes)), []);
+
   return (
     <div>
       <Header />
@@ -127,4 +114,6 @@ function App() {
 }
 
 export default App;
+
+
 
