@@ -121,12 +121,30 @@ function Note({ item, setNotes, notes }) {
     try {
       await deleteNote(item.id);
       //const newNotes = notes.filter((note) => item.id !== note.id);
-      //setNotes([...notes,newNotes)]
+      //setNotes(newNotes);
       getNotes().then((notes) => setNotes(notes))
     } catch (e) {
       alert("There as a problem deleting the comments. Please try again");
     }
   }  
+
+  async function handleRecover() {
+    try {
+      const newNote = await updateNote(item.id, {deleted_at: null});
+      const newNotes = notes.map((note) => {
+        if(note.id === item.id) {
+          return newNote;
+        }
+        else {
+          return note;
+        }
+      });
+      setNotes(newNotes);
+      //getNotes().then((notes) => setNotes(notes))
+    } catch (e) {
+      alert("There as a problem deleting the comments. Please try again");
+    }
+  }
 
   return (
     <div className="card">
@@ -145,6 +163,7 @@ function Note({ item, setNotes, notes }) {
           src={recoveryIcon}
           className={item.deleted_at === null ? "hidden" : ""}
           alt="recover"
+          onClick={handleRecover}
         />
       </div>
     </div>
