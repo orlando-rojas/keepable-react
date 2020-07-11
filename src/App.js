@@ -1,11 +1,27 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import { css, jsx } from "@emotion/core";
 import logo from "./images/logo.png";
 import trashIcon from "./images/icons/trash.svg";
 import bracesIcon from "./images/icons/code.svg";
 import paletteIcon from "./images/icons/color-picker.svg";
 import recoveryIcon from "./images/icons/restore.svg";
 import { getNotes, createNote, updateNote, deleteNote } from "../src/api";
+
+const COLORES = {
+  white: "#FFFFFF",
+  salmon: "#F28B82",
+  orange: "#FBBC04",
+  yellow: "#FFF475",
+  green: "#CCFF90",
+  teal: "#A7FFEB",
+  light_blue: "#CBF0F8",
+  blue: "#AECBFA",
+  purple: "#D7AEFB",
+  pink: "#FDCFE8",
+};
+
+const COLORES_KEYS = Object.keys(COLORES);
 
 function Header() {
   return (
@@ -43,13 +59,26 @@ function Navbar({ setSection }) {
   );
 }
 
+function ColorCircle({ color, formData, setFormData }) {
+  function handleColorChange() {
+    setFormData({
+      ...formData,
+      color,
+    });
+  }
+
+  return <div className="color blanco" onClick={handleColorChange}></div>;
+}
+
 function NewNoteForm({ setNotes, notes }) {
   console.log(notes);
   const [formData, setFormData] = useState({
     title: "",
     body: "",
-    color: "white",
+    color: "",
   });
+
+  console.log(formData);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -92,17 +121,17 @@ function NewNoteForm({ setNotes, notes }) {
         onChange={handleChange}
       />
       <div className="form-bot">
-        <div className="colors-wrapper hidden">
-          <div className="color blanco" data-color="#FFFFFF"></div>
-          <div className="color coral" data-color="#F28B82"></div>
-          <div className="color mostaza" data-color="#FBBC04"></div>
-          <div className="color amarillo" data-color="#FFF475"></div>
-          <div className="color verde" data-color="#CCFF90"></div>
-          <div className="color turquesa" data-color="#A7FFEB"></div>
-          <div className="color celeste" data-color="#CBF0F8"></div>
-          <div className="color azul" data-color="#AECBFA"></div>
-          <div className="color morado" data-color="#D7AEFB"></div>
-          <div className="color rosado" data-color="#FDCFE8"></div>
+        <div className="colors-wrapper">
+          {COLORES_KEYS.map((color) => {
+            return (
+              <ColorCircle
+                color={color}
+                formData={formData}
+                setFormData={setFormData}
+                css={{ backgroundColor: "#f90" }}
+              />
+            );
+          })}
         </div>
         <img src={paletteIcon} alt="color picker" className="icon-paleta" />
         <input type="submit" value="Keep it!" className="btn-keep-it" />
@@ -112,7 +141,6 @@ function NewNoteForm({ setNotes, notes }) {
 }
 
 function Note({ item, setNotes, notes }) {
-
   function handleDelete() {
     permanentDelete(item);
   }
@@ -122,20 +150,19 @@ function Note({ item, setNotes, notes }) {
       await deleteNote(item.id);
       //const newNotes = notes.filter((note) => item.id !== note.id);
       //setNotes(newNotes);
-      getNotes().then((notes) => setNotes(notes))
+      getNotes().then((notes) => setNotes(notes));
     } catch (e) {
       alert("There as a problem deleting the comments. Please try again");
     }
-  }  
+  }
 
   async function handleRecover() {
     try {
-      const newNote = await updateNote(item.id, {deleted_at: null});
+      const newNote = await updateNote(item.id, { deleted_at: null });
       const newNotes = notes.map((note) => {
-        if(note.id === item.id) {
+        if (note.id === item.id) {
           return newNote;
-        }
-        else {
+        } else {
           return note;
         }
       });
@@ -173,9 +200,11 @@ function Note({ item, setNotes, notes }) {
 function NotesList({ section, notes, setNotes }) {
   return (
     <div className="saved-notes">
-      {notes
-        .map((note) => typeof(note.deleted_at) === typeof(section) ? <Note item={note} setNotes={setNotes} notes={notes} /> : null)
-      }
+      {notes.map((note) =>
+        typeof note.deleted_at === typeof section ? (
+          <Note item={note} setNotes={setNotes} notes={notes} />
+        ) : null
+      )}
     </div>
   );
 }
@@ -194,7 +223,6 @@ export default function App() {
   const [section, setSection] = useState(null);
   const [notes, setNotes] = useState([]);
 
-
   useEffect(() => getNotes().then((notes) => setNotes(notes)), []);
 
   return (
@@ -207,4 +235,3 @@ export default function App() {
     </div>
   );
 }
-
