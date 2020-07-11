@@ -5,6 +5,7 @@
   padding: 0;
   box-sizing: border-box;
   text-decoration: none;
+  list-style: none;
 }
 
 html {
@@ -17,65 +18,12 @@ body {
   height: 100%;
 }
 
-header {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: 70px;
-  padding-left: 30px;
-  border-bottom: 2px solid #d1d1d1;
-}
-
-.keepable-logo {
-  height: 24px;
-}
-
-.welcome-msg {
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 24px;
-  letter-spacing: 0.25px;
-  color: #ffffff;
-  margin-left: 117px;
-}
-
 main {
   display: flex;
   min-width: auto;
 }
 
-.navbar {
-  padding-top: 10px;
-  max-width: 280px;
-  min-height: 100vh;
-  height: auto;
-  border-right: 2px solid #d1d1d1;
-}
-
-.nav-list {
-  list-style: none;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  height: 50px;
-  padding-left: 20px;
-  border-radius: 0px 25px 25px 0px;
-  width: 280px;
-  color: #fff;
-  cursor: pointer;
-}
-
-.nav-item span {
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 20px;
-  letter-spacing: 0.25px;
-  margin-left: 20px;
-}
-
-.nav-item.active {
+.active {
   background: #999b9e;
 }
 
@@ -85,17 +33,6 @@ main {
   width: 100%;
 }
 
-.new-note-form {
-  position: relative;
-  margin: 20px auto 60px auto;
-  width: 600px;
-  height: 150px;
-  background: #ffffff;
-  box-shadow: 5px 5px 15px rgba(153, 155, 158, 0.85);
-  border-radius: 8px;
-  padding: 20px 20px 20px 20px;
-}
-
 .card-bottom {
   position: relative;
   display: flex;
@@ -103,39 +40,6 @@ main {
   align-items: center;
   width: 63px;
   justify-content: space-between;
-}
-
-.new-note-input {
-  border: none;
-  margin-bottom: 10px;
-  height: 20px;
-  width: 100%;
-  background-color: inherit;
-}
-
-.new-note-input::placeholder {
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 24px;
-  letter-spacing: 0.25px;
-}
-
-.form-bot {
-  width: 100%;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-top: 29px;
-}
-
-.btn-keep-it {
-  font-weight: bold;
-  font-size: 18px;
-  line-height: 24px;
-  letter-spacing: 0.25px;
-  color: #000000;
-  border: none;
-  background: none;
 }
 
 .card {
@@ -214,31 +118,6 @@ main {
   letter-spacing: 0.25px;
   color: #ffffff;
   margin: 0 auto;
-}
-
-.colors-wrapper {
-  background-color: #eee;
-  height: 65px;
-  width: 155px;
-  display: flex;
-  flex-wrap: wrap;
-  padding: 5px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 8px;
-  position: absolute;
-  bottom: 30px;
-  left: -60px;
-}
-
-.yellow {
-  background-color: "yellow";
-}
-
-.color {
-  height: 25px;
-  width: 25px;
-  border-radius: 50%;
-  margin-right: 4px;
 }
 
 .hidden {
