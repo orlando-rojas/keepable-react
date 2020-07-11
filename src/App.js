@@ -72,12 +72,31 @@ function Navbar({ setSection, section }) {
   );
 }
 
-function NoteCircle({ color }) {
+function NoteCircle({ color, setNotes, item, notes }) {
+  
+  async function handleChangeColor() {
+    try {
+      const newNote = await updateNote(item.id, { color });
+      const newNotes = notes.map((note) => {
+        if (note.id === item.id) {
+          return newNote;
+        } else {
+          return note;
+        }
+      });
+      setNotes(newNotes);
+      //getNotes().then((notes) => setNotes(notes))
+    } catch (e) {
+      alert("There as a problem deleting the comments. Please try again");
+    }
+  }
+  
   return (
     <Circle
       css={css`
-        background-color: ${COLORES[color]};
+      background-color: ${COLORES[color]};
       `}
+      onClick={handleChangeColor}
     />
   );
 }
@@ -234,7 +253,7 @@ function Note({ item, setNotes, notes }) {
         {showPalete ? (
           <div className="colors-wrapper">
             {COLORES_KEYS.map((color) => {
-              return <NoteCircle color={color} />;
+              return <NoteCircle color={color} item={item} setNotes={setNotes} notes={notes}/>;
             })}
           </div>
         ) : null}
