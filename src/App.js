@@ -1,6 +1,8 @@
+/* @jsx jsx */
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { css, jsx } from "@emotion/core";
+import styled from "@emotion/styled";
 import logo from "./images/logo.png";
 import trashIcon from "./images/icons/trash.svg";
 import bracesIcon from "./images/icons/code.svg";
@@ -67,7 +69,16 @@ function ColorCircle({ color, formData, setFormData }) {
     });
   }
 
-  return <div className="color blanco" onClick={handleColorChange}></div>;
+  return (
+    <div
+      className="color blanco"
+      onClick={handleColorChange}
+      css={css`
+      background-color: ${COLORES[color]};
+      }
+    `}
+    ></div>
+  );
 }
 
 function NewNoteForm({ setNotes, notes }) {
@@ -128,7 +139,6 @@ function NewNoteForm({ setNotes, notes }) {
                 color={color}
                 formData={formData}
                 setFormData={setFormData}
-                css={{ backgroundColor: "#f90" }}
               />
             );
           })}
