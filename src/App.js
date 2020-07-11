@@ -9,6 +9,21 @@ import bracesIcon from "./images/icons/code.svg";
 import paletteIcon from "./images/icons/color-picker.svg";
 import recoveryIcon from "./images/icons/restore.svg";
 import { getNotes, createNote, updateNote, deleteNote } from "../src/api";
+import {
+  CreateNoteForm,
+  FormInput,
+  FormBottom,
+  ColorsWrapper,
+  BtnKeepIt,
+} from "./components/form";
+import {
+  WelcomeMsg,
+  Head,
+  Nav,
+  NavItem,
+  NavItemText,
+  Circle,
+} from "./components/styles";
 
 const COLORES = {
   white: "#FFFFFF",
@@ -27,49 +42,43 @@ const COLORES_KEYS = Object.keys(COLORES);
 
 function Header() {
   return (
-    <header>
-      <img src={logo} height="138px" className="keepable-logo" alt="logo" />
-      <p className="welcome-msg">Welcome to keepable.</p>
-    </header>
+    <Head>
+      <img src={logo} height="24px" alt="logo" />
+      <WelcomeMsg>Welcome to keepable.</WelcomeMsg>
+    </Head>
   );
 }
 
-function Navbar({ setSection }) {
+function Navbar({ setSection, section }) {
   return (
-    <nav className="navbar">
-      <ul className="nav-list">
-        <li
-          className="nav-item active"
-          onClick={() => {
-            setSection(null);
-          }}
+    <Nav>
+      <ul>
+        <NavItem
+          className={section === null ? "active" : null}
+          onClick={() => setSection(null)}
         >
           <img src={bracesIcon} alt="curly braces" />
-          <span>Notes</span>
-        </li>
-        <li
-          className="nav-item"
-          onClick={() => {
-            setSection("trash");
-          }}
+          <NavItemText>Notes</NavItemText>
+        </NavItem>
+        <NavItem
+          className={section === "trash" ? "active" : null}
+          onClick={() => setSection("trash")}
         >
           <img src={trashIcon} alt="trash icon" />
-          <span>Trash</span>
-        </li>
+          <NavItemText>Trash</NavItemText>
+        </NavItem>
       </ul>
-    </nav>
+    </Nav>
   );
 }
 
 function NoteCircle({ color }) {
   return (
-    <div
-      className="color"
+    <Circle
       css={css`
-      background-color: ${COLORES[color]};
-      }
-    `}
-    ></div>
+        background-color: ${COLORES[color]};
+      `}
+    />
   );
 }
 
@@ -82,14 +91,12 @@ function ColorCircle({ color, formData, setFormData }) {
   }
 
   return (
-    <div
-      className="color"
+    <Circle
       onClick={handleColorChange}
       css={css`
-      background-color: ${COLORES[color]};
-      }
-    `}
-    ></div>
+        background-color: ${COLORES[color]};
+      `}
+    />
   );
 }
 
@@ -125,8 +132,6 @@ function NewNoteForm({ setNotes, notes }) {
     }
   }
 
-  console.log(formData);
-
   const [showPalete, setShowPalete] = useState(false);
 
   function togglePalette() {
@@ -134,32 +139,28 @@ function NewNoteForm({ setNotes, notes }) {
   }
 
   return (
-    <form
-      id="new-note"
-      className="new-note-form"
+    <CreateNoteForm
       onSubmit={handleSubmit}
       css={css`
       background-color: ${COLORES[formData.color]};
     }
   `}
     >
-      <input
+      <FormInput
         type="text"
         placeholder="Title"
-        className="new-note-input"
         name="title"
         onChange={handleChange}
       />
-      <input
+      <FormInput
         type="text"
         placeholder="Take a note"
-        className="new-note-input"
         name="body"
         onChange={handleChange}
       />
-      <div className="form-bot">
+      <FormBottom>
         {showPalete ? (
-          <div className="colors-wrapper">
+          <ColorsWrapper>
             {COLORES_KEYS.map((color) => {
               return (
                 <ColorCircle
@@ -169,18 +170,13 @@ function NewNoteForm({ setNotes, notes }) {
                 />
               );
             })}
-          </div>
+          </ColorsWrapper>
         ) : null}
 
-        <img
-          src={paletteIcon}
-          alt="color picker"
-          className="icon-paleta"
-          onClick={togglePalette}
-        />
-        <input type="submit" value="Keep it!" className="btn-keep-it" />
-      </div>
-    </form>
+        <img src={paletteIcon} alt="color picker" onClick={togglePalette} />
+        <BtnKeepIt type="submit" value="Keep it!" />
+      </FormBottom>
+    </CreateNoteForm>
   );
 }
 
@@ -292,7 +288,7 @@ export default function App() {
     <div>
       <Header />
       <main>
-        <Navbar setSection={setSection} />
+        <Navbar setSection={setSection} section={section} />
         <SavedNotes section={section} notes={notes} setNotes={setNotes} />
       </main>
     </div>
