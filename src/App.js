@@ -120,7 +120,14 @@ function Note({ item, setNotes, notes }) {
   async function goToTrash() {
     try {
       const newNote = await updateNote(item.id, {deleted_at: "ga"});
-      setNotes([...notes, newNote]);
+      const newNotes = notes.map((note) => {
+        if (item.id === note.id) {
+          return newNote;
+        } else {
+          return note;
+        }
+      });
+      setNotes(newNotes); 
     } catch (e) {
       alert("There as a problem deleting the comments. Please try again");
     }
@@ -129,12 +136,22 @@ function Note({ item, setNotes, notes }) {
 
   async function permanentDelete() {
     try {
-      const newNote = await deleteNote(item.id);
-      //setNotes([...notes, newNote]);
+      await deleteNote(item.id);
+      const newNotes = notes.map((note) => {
+        if (item.id === note.id) {
+          return null;
+        } else {
+          return note;
+        }
+      });
+      setNotes(newNotes);
     } catch (e) {
       alert("There as a problem deleting the comments. Please try again");
     }
   }  
+
+
+
 
 
   return (
