@@ -69,7 +69,7 @@ function NewNoteForm({ setNotes, notes }) {
       const newNote = await createNote(formData);
       setNotes([...notes, newNote]);
     } catch (e) {
-      alert("There as a problem requiring the comments. Please try again");
+      alert("There as a problem accessing the comments. Please try again");
     }
   }
 
@@ -111,7 +111,23 @@ function NewNoteForm({ setNotes, notes }) {
   );
 }
 
-function Note({ item }) {
+function Note({ item, setNotes, notes }) {
+
+  function handleDelete() {
+    permanentDelete(item);
+  }
+
+  async function permanentDelete(item) {
+    try {
+      await deleteNote(item.id);
+      //const newNotes = notes.filter((note) => item.id !== note.id);
+      //setNotes([...notes,newNotes)]
+      getNotes().then((notes) => setNotes(notes))
+    } catch (e) {
+      alert("There as a problem deleting the comments. Please try again");
+    }
+  }  
+
   return (
     <div className="card">
       <div>
@@ -124,7 +140,7 @@ function Note({ item }) {
           alt="palette"
           className={item.deleted_at === null ? "icon-paleta" : "hidden"}
         />
-        <img src={trashIcon} alt="trash" />
+        <img src={trashIcon} alt="trash" onClick={handleDelete} />
         <img
           src={recoveryIcon}
           className={item.deleted_at === null ? "hidden" : ""}
@@ -135,18 +151,12 @@ function Note({ item }) {
   );
 }
 
-function NotesList({ section, notes }) {
+function NotesList({ section, notes, setNotes }) {
   return (
     <div className="saved-notes">
-      {notes.length === 0 ? (
-        <div className="no-saved-notes hidden">
-          <p>Notes you add appear here</p>
-        </div>
-      ) : (
-        notes
-          .filter((note) => typeof note.deleted_at === typeof section)
-          .map((item) => <Note item={item} />)
-      )}
+      {notes
+        .map((note) => typeof(note.deleted_at) === typeof(section) ? <Note item={note} setNotes={setNotes} notes={notes} /> : null)
+      }
     </div>
   );
 }
@@ -157,13 +167,14 @@ function SavedNotes({ section, notes, setNotes }) {
       {section === null ? (
         <NewNoteForm setNotes={setNotes} notes={notes} />
       ) : null}
-      <NotesList section={section} notes={notes} />
+      <NotesList section={section} notes={notes} setNotes={setNotes} />
     </div>
   );
 }
-function App() {
+export default function App() {
   const [section, setSection] = useState(null);
   const [notes, setNotes] = useState([]);
+
 
   useEffect(() => getNotes().then((notes) => setNotes(notes)), []);
 
@@ -178,4 +189,3 @@ function App() {
   );
 }
 
-export default App;

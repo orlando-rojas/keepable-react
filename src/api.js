@@ -18,10 +18,10 @@ export async function getNotes() {
   const data = await response.json();
   return data;
 }
-export async function createNote(formData) {
+export async function createNote(username, text) {
   const response = await request(`${API_ROOT}/notes`, {
     method: "POST",
-    body: JSON.stringify(formData),
+    body: JSON.stringify({ username, text }),
     headers: HEADERS,
   });
   const data = await response.json();
@@ -40,3 +40,4 @@ export async function updateNote(id, updates) {
   });
   return await response.json();
 }
+
