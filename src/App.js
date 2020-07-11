@@ -114,45 +114,19 @@ function NewNoteForm({ setNotes, notes }) {
 function Note({ item, setNotes, notes }) {
 
   function handleDelete() {
-    item.deleted_at === null ? goToTrash() : permanentDelete();
+    permanentDelete(item);
   }
 
-  async function goToTrash() {
-    try {
-      const newNote = await updateNote(item.id, {deleted_at: "ga"});
-      const newNotes = notes.map((note) => {
-        if (item.id === note.id) {
-          return newNote;
-        } else {
-          return note;
-        }
-      });
-      setNotes(newNotes); 
-    } catch (e) {
-      alert("There as a problem deleting the comments. Please try again");
-    }
-  }
-  
-
-  async function permanentDelete() {
+  async function permanentDelete(item) {
     try {
       await deleteNote(item.id);
-      const newNotes = notes.map((note) => {
-        if (item.id === note.id) {
-          return null;
-        } else {
-          return note;
-        }
-      });
-      setNotes(newNotes);
+      //const newNotes = notes.filter((note) => item.id !== note.id);
+      //setNotes([...notes,newNotes)]
+      getNotes().then((notes) => setNotes(notes))
     } catch (e) {
       alert("There as a problem deleting the comments. Please try again");
     }
   }  
-
-
-
-
 
   return (
     <div className="card">
@@ -180,15 +154,9 @@ function Note({ item, setNotes, notes }) {
 function NotesList({ section, notes, setNotes }) {
   return (
     <div className="saved-notes">
-      {notes.length === 0 ? (
-        <div className="no-saved-notes hidden">
-          <p>Notes you add appear here</p>
-        </div>
-      ) : (
-        notes
-          .filter((note) => typeof note.deleted_at === typeof section)
-          .map((item) => <Note item={item} setNotes={setNotes} notes={notes}/>)
-      )}
+      {notes
+        .map((note) => typeof(note.deleted_at) === typeof(section) ? <Note item={note} setNotes={setNotes} notes={notes} /> : null)
+      }
     </div>
   );
 }
@@ -207,6 +175,7 @@ export default function App() {
   const [section, setSection] = useState(null);
   const [notes, setNotes] = useState([]);
 
+
   useEffect(() => getNotes().then((notes) => setNotes(notes)), []);
 
   return (
@@ -219,5 +188,4 @@ export default function App() {
     </div>
   );
 }
-
 
