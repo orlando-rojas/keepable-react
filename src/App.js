@@ -61,6 +61,18 @@ function Navbar({ setSection }) {
   );
 }
 
+function NoteCircle({ color }) {
+  return (
+    <div
+      className="color"
+      css={css`
+      background-color: ${COLORES[color]};
+      }
+    `}
+    ></div>
+  );
+}
+
 function ColorCircle({ color, formData, setFormData }) {
   function handleColorChange() {
     setFormData({
@@ -71,7 +83,7 @@ function ColorCircle({ color, formData, setFormData }) {
 
   return (
     <div
-      className="color blanco"
+      className="color"
       onClick={handleColorChange}
       css={css`
       background-color: ${COLORES[color]};
@@ -115,8 +127,22 @@ function NewNoteForm({ setNotes, notes }) {
 
   console.log(formData);
 
+  const [showPalete, setShowPalete] = useState(false);
+
+  function togglePalette() {
+    setShowPalete(!showPalete);
+  }
+
   return (
-    <form id="new-note" className="new-note-form" onSubmit={handleSubmit}>
+    <form
+      id="new-note"
+      className="new-note-form"
+      onSubmit={handleSubmit}
+      css={css`
+      background-color: ${COLORES[formData.color]};
+    }
+  `}
+    >
       <input
         type="text"
         placeholder="Title"
@@ -132,18 +158,26 @@ function NewNoteForm({ setNotes, notes }) {
         onChange={handleChange}
       />
       <div className="form-bot">
-        <div className="colors-wrapper">
-          {COLORES_KEYS.map((color) => {
-            return (
-              <ColorCircle
-                color={color}
-                formData={formData}
-                setFormData={setFormData}
-              />
-            );
-          })}
-        </div>
-        <img src={paletteIcon} alt="color picker" className="icon-paleta" />
+        {showPalete ? (
+          <div className="colors-wrapper">
+            {COLORES_KEYS.map((color) => {
+              return (
+                <ColorCircle
+                  color={color}
+                  formData={formData}
+                  setFormData={setFormData}
+                />
+              );
+            })}
+          </div>
+        ) : null}
+
+        <img
+          src={paletteIcon}
+          alt="color picker"
+          className="icon-paleta"
+          onClick={togglePalette}
+        />
         <input type="submit" value="Keep it!" className="btn-keep-it" />
       </div>
     </form>
@@ -183,17 +217,36 @@ function Note({ item, setNotes, notes }) {
     }
   }
 
+  const [showPalete, setShowPalete] = useState(false);
+
+  function togglePalete() {
+    setShowPalete(!showPalete);
+  }
+
   return (
-    <div className="card">
+    <div
+      className="card"
+      css={css`
+        background-color: ${item.color};
+      `}
+    >
       <div>
         <h3 className="card-title">{item.title}</h3>
         <p className="card-text">{item.body}</p>
       </div>
       <div className="card-bottom">
+        {showPalete ? (
+          <div className="colors-wrapper">
+            {COLORES_KEYS.map((color) => {
+              return <NoteCircle color={color} />;
+            })}
+          </div>
+        ) : null}
         <img
           src={paletteIcon}
           alt="palette"
           className={item.deleted_at === null ? "icon-paleta" : "hidden"}
+          onClick={togglePalete}
         />
         <img src={trashIcon} alt="trash" onClick={handleDelete} />
         <img
