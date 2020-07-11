@@ -18,10 +18,10 @@ export async function getNotes() {
   const data = await response.json();
   return data;
 }
-export async function createNote(username, text) {
+export async function createNote(values) {
   const response = await request(`${API_ROOT}/notes`, {
     method: "POST",
-    body: JSON.stringify({ username, text }),
+    body: JSON.stringify(values),
     headers: HEADERS,
   });
   const data = await response.json();
