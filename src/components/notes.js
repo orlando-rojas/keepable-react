@@ -86,7 +86,7 @@ export default function NotesList({ section, notes, setNotes }) {
     <NotesContainer>
       {notes.map((note) =>
         typeof note.deleted_at === typeof section ? (
-          <Note item={note} setNotes={setNotes} notes={notes} />
+          <Note key={note.id} item={note} setNotes={setNotes} notes={notes} />
         ) : null
       )}
     </NotesContainer>
@@ -136,7 +136,7 @@ function Note({ item, setNotes, notes }) {
   return (
     <Card
       css={css`
-        background-color: ${item.color};
+        background-color: ${COLORES[item.color]};
       `}
     >
       <div>
@@ -147,7 +147,7 @@ function Note({ item, setNotes, notes }) {
         {showPalete ? (
           < ColorsWrapper>
             {COLORES_KEYS.map((color) => {
-              return <NoteCircle color={color} item={item} setNotes={setNotes} notes={notes}/>;
+              return <NoteCircle key={Date.now()} color={color} item={item} setNotes={setNotes} notes={notes} togglePalete={togglePalete}/>;
             })}
           </ ColorsWrapper>
         ) : null}
@@ -169,7 +169,7 @@ function Note({ item, setNotes, notes }) {
   );
 }
 
-function NoteCircle({ color, setNotes, item, notes }) {
+function NoteCircle({ color, setNotes, item, notes, togglePalete }) {
   
   async function handleChangeColor() {
     try {
@@ -182,6 +182,7 @@ function NoteCircle({ color, setNotes, item, notes }) {
         }
       });
       setNotes(newNotes);
+      togglePalete();
       //getNotes().then((notes) => setNotes(notes))
     } catch (e) {
       alert("There as a problem deleting the comments. Please try again");
