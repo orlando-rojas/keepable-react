@@ -1,14 +1,12 @@
-/* @jsx jsx */
-import React, { useState, useEffect } from "react";
+/** @jsx jsx */
+import { useState, useEffect } from "react";
 import "./App.css";
 import { css, jsx } from "@emotion/core";
-import styled from "@emotion/styled";
 import logo from "./images/logo.png";
 import trashIcon from "./images/icons/trash.svg";
 import bracesIcon from "./images/icons/code.svg";
 import paletteIcon from "./images/icons/color-picker.svg";
-import recoveryIcon from "./images/icons/restore.svg";
-import { getNotes, createNote, updateNote, deleteNote } from "../src/api";
+import { getNotes, createNote} from "./api";
 import {
   CreateNoteForm,
   FormInput,
@@ -24,6 +22,9 @@ import {
   NavItemText,
   Circle,
 } from "./components/styles";
+
+import { Notes } from "./components/notes";
+import NotesList from "./components/notes"; 
 
 const COLORES = {
   white: "#FFFFFF",
@@ -69,35 +70,6 @@ function Navbar({ setSection, section }) {
         </NavItem>
       </ul>
     </Nav>
-  );
-}
-
-function NoteCircle({ color, setNotes, item, notes }) {
-  
-  async function handleChangeColor() {
-    try {
-      const newNote = await updateNote(item.id, { color });
-      const newNotes = notes.map((note) => {
-        if (note.id === item.id) {
-          return newNote;
-        } else {
-          return note;
-        }
-      });
-      setNotes(newNotes);
-      //getNotes().then((notes) => setNotes(notes))
-    } catch (e) {
-      alert("There as a problem deleting the comments. Please try again");
-    }
-  }
-  
-  return (
-    <Circle
-      css={css`
-      background-color: ${COLORES[color]};
-      `}
-      onClick={handleChangeColor}
-    />
   );
 }
 
@@ -199,102 +171,14 @@ function NewNoteForm({ setNotes, notes }) {
   );
 }
 
-function Note({ item, setNotes, notes }) {
-  function handleDelete() {
-    permanentDelete(item);
-  }
-
-  async function permanentDelete(item) {
-    try {
-      await deleteNote(item.id);
-      //const newNotes = notes.filter((note) => item.id !== note.id);
-      //setNotes(newNotes);
-      getNotes().then((notes) => setNotes(notes));
-    } catch (e) {
-      alert("There as a problem deleting the comments. Please try again");
-    }
-  }
-
-  async function handleRecover() {
-    try {
-      const newNote = await updateNote(item.id, { deleted_at: null });
-      const newNotes = notes.map((note) => {
-        if (note.id === item.id) {
-          return newNote;
-        } else {
-          return note;
-        }
-      });
-      setNotes(newNotes);
-      //getNotes().then((notes) => setNotes(notes))
-    } catch (e) {
-      alert("There as a problem deleting the comments. Please try again");
-    }
-  }
-
-  const [showPalete, setShowPalete] = useState(false);
-
-  function togglePalete() {
-    setShowPalete(!showPalete);
-  }
-
-  return (
-    <div
-      className="card"
-      css={css`
-        background-color: ${item.color};
-      `}
-    >
-      <div>
-        <h3 className="card-title">{item.title}</h3>
-        <p className="card-text">{item.body}</p>
-      </div>
-      <div className="card-bottom">
-        {showPalete ? (
-          <div className="colors-wrapper">
-            {COLORES_KEYS.map((color) => {
-              return <NoteCircle color={color} item={item} setNotes={setNotes} notes={notes}/>;
-            })}
-          </div>
-        ) : null}
-        <img
-          src={paletteIcon}
-          alt="palette"
-          className={item.deleted_at === null ? "icon-paleta" : "hidden"}
-          onClick={togglePalete}
-        />
-        <img src={trashIcon} alt="trash" onClick={handleDelete} />
-        <img
-          src={recoveryIcon}
-          className={item.deleted_at === null ? "hidden" : ""}
-          alt="recover"
-          onClick={handleRecover}
-        />
-      </div>
-    </div>
-  );
-}
-
-function NotesList({ section, notes, setNotes }) {
-  return (
-    <div className="saved-notes">
-      {notes.map((note) =>
-        typeof note.deleted_at === typeof section ? (
-          <Note item={note} setNotes={setNotes} notes={notes} />
-        ) : null
-      )}
-    </div>
-  );
-}
-
 function SavedNotes({ section, notes, setNotes }) {
   return (
-    <div className="notes">
+    <Notes>
       {section === null ? (
         <NewNoteForm setNotes={setNotes} notes={notes} />
       ) : null}
       <NotesList section={section} notes={notes} setNotes={setNotes} />
-    </div>
+    </Notes>
   );
 }
 export default function App() {
