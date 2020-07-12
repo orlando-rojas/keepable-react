@@ -27,17 +27,6 @@ main {
   background: #999b9e;
 }
 
-.no-saved-notes {
-  font-weight: bold;
-  max-width: 280px;
-  font-size: 36px;
-  line-height: 48px;
-  text-align: center;
-  letter-spacing: 0.25px;
-  color: #ffffff;
-  margin: 0 auto;
-}
-
 .hidden {
   display: none;
 }

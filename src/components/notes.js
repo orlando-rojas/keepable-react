@@ -7,32 +7,17 @@ import trashIcon from "../images/icons/trash.svg";
 import paletteIcon from "../images/icons/color-picker.svg";
 import recoveryIcon from "../images/icons/restore.svg";
 import { getNotes, updateNote, deleteNote } from "../api";
-import {ColorsWrapper} from "./form";
-import {Circle} from "./styles";
-
-const COLORES = {
-  white: "#FFFFFF",
-  salmon: "#F28B82",
-  orange: "#FBBC04",
-  yellow: "#FFF475",
-  green: "#CCFF90",
-  teal: "#A7FFEB",
-  light_blue: "#CBF0F8",
-  blue: "#AECBFA",
-  purple: "#D7AEFB",
-  pink: "#FDCFE8",
-};
-
-const COLORES_KEYS = Object.keys(COLORES);
-
+import { ColorsWrapper } from "./form";
+import { Circle } from "./styles";
+import { COLORES, COLORES_KEYS } from "../App";
 
 export const Notes = styled.div`
-display: flex;
-flex-direction: column;
-width: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 `;
 
-const CardBottom = styled.div` 
+const CardBottom = styled.div`
   position: relative;
   display: flex;
   flex-wrap: wrap;
@@ -81,18 +66,40 @@ const NotesContainer = styled.div`
   flex-wrap: wrap;
 `;
 
+const EmptyWrapper = styled.div`
+  font-weight: bold;
+  max-width: 280px;
+  font-size: 36px;
+  line-height: 48px;
+  text-align: center;
+  letter-spacing: 0.25px;
+  color: #ffffff;
+  margin: 0 auto;
+`;
+
 export default function NotesList({ section, notes, setNotes }) {
   return (
     <NotesContainer>
-      {notes.map((note) =>
-        typeof note.deleted_at === typeof section ? (
-          <Note item={note} setNotes={setNotes} notes={notes} />
-        ) : null
+      {notes.filter((x) => x.deleted_at === null).length === 0 ? (
+        <EmptyNotes />
+      ) : (
+        notes.map((note) =>
+          typeof note.deleted_at === typeof section ? (
+            <Note item={note} setNotes={setNotes} notes={notes} />
+          ) : null
+        )
       )}
     </NotesContainer>
   );
 }
 
+function EmptyNotes() {
+  return (
+    <EmptyWrapper>
+      <p>Notes you add appear here</p>
+    </EmptyWrapper>
+  );
+}
 
 function Note({ item, setNotes, notes }) {
   function handleDelete() {
@@ -121,7 +128,6 @@ function Note({ item, setNotes, notes }) {
         }
       });
       setNotes(newNotes);
-      //getNotes().then((notes) => setNotes(notes))
     } catch (e) {
       alert("There as a problem deleting the comments. Please try again");
     }
@@ -136,7 +142,7 @@ function Note({ item, setNotes, notes }) {
   return (
     <Card
       css={css`
-        background-color: ${item.color};
+        background-color: ${COLORES[item.color]};
       `}
     >
       <div>
@@ -145,11 +151,18 @@ function Note({ item, setNotes, notes }) {
       </div>
       <CardBottom>
         {showPalete ? (
-          < ColorsWrapper>
+          <ColorsWrapper>
             {COLORES_KEYS.map((color) => {
-              return <NoteCircle color={color} item={item} setNotes={setNotes} notes={notes}/>;
+              return (
+                <NoteCircle
+                  color={color}
+                  item={item}
+                  setNotes={setNotes}
+                  notes={notes}
+                />
+              );
             })}
-          </ ColorsWrapper>
+          </ColorsWrapper>
         ) : null}
         <img
           src={paletteIcon}
@@ -170,7 +183,6 @@ function Note({ item, setNotes, notes }) {
 }
 
 function NoteCircle({ color, setNotes, item, notes }) {
-  
   async function handleChangeColor() {
     try {
       const newNote = await updateNote(item.id, { color });
@@ -182,12 +194,11 @@ function NoteCircle({ color, setNotes, item, notes }) {
         }
       });
       setNotes(newNotes);
-      //getNotes().then((notes) => setNotes(notes))
     } catch (e) {
       alert("There as a problem deleting the comments. Please try again");
     }
   }
-  
+
   return (
     <Circle
       css={css`
