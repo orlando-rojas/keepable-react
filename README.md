@@ -1,6 +1,6 @@
 # Keepable
 
-Frontend for Keepable React.
+Frontend for Keepable React.__                                                                    
 Team: Orlando Rojas and Elvis Quispe
 
 ## Installation
