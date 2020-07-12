@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { useState, useEffect } from "react";
 import "./App.css";
-import { jsx } from "@emotion/core";
+import { css, jsx } from "@emotion/core";
 import logo from "./images/logo.png";
 import trashIcon from "./images/icons/trash.svg";
 import bracesIcon from "./images/icons/code.svg";
@@ -79,12 +79,18 @@ export default function App() {
   const [section, setSection] = useState(null);
   const [notes, setNotes] = useState([]);
 
-  useEffect(() => getNotes().then((notes) => setNotes(notes)), []);
+  useEffect(() => {
+    getNotes().then((notes) => setNotes(notes));
+  }, []);
 
   return (
     <div>
       <Header />
-      <main>
+      <main
+        css={css`
+          display: flex;
+        `}
+      >
         <Navbar setSection={setSection} section={section} />
         <SavedNotes section={section} notes={notes} setNotes={setNotes} />
       </main>

@@ -24,6 +24,11 @@ const CardBottom = styled.div`
   align-items: center;
   width: 63px;
   justify-content: space-between;
+  img {
+    background-color: white;
+    padding: 5px;
+    border-radius: 50%;
+  }
 `;
 
 const Card = styled.div`
@@ -35,7 +40,7 @@ const Card = styled.div`
   box-shadow: 5px 5px 15px rgba(153, 155, 158, 0.85);
   border-radius: 8px;
   padding: 20px;
-  padding-bottom: 2px;
+  padding-bottom: 10px;
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
@@ -80,14 +85,14 @@ const EmptyWrapper = styled.div`
 export default function NotesList({ section, notes, setNotes }) {
   return (
     <NotesContainer>
-      {notes.filter((x) => x.deleted_at === null).length === 0 ? (
+      {notes.filter((x) => x.deleted_at === null).length === 0 &&
+      section == null ? (
         <EmptyNotes />
-      ) : (
-        notes.map((note) =>
-          typeof note.deleted_at === typeof section ? (
-            <Note item={note} setNotes={setNotes} notes={notes} />
-          ) : null
-        )
+      ) : null}
+      {notes.map((note) =>
+        typeof note.deleted_at === typeof section ? (
+          <Note key={note.id} item={note} setNotes={setNotes} notes={notes} />
+        ) : null
       )}
     </NotesContainer>
   );
@@ -153,7 +158,16 @@ function Note({ item, setNotes, notes }) {
         {showPalete ? (
           <ColorsWrapper>
             {COLORES_KEYS.map((color) => {
-              return <NoteCircle key={Date.now()} color={color} item={item} setNotes={setNotes} notes={notes} togglePalete={togglePalete}/>;
+              return (
+                <NoteCircle
+                  key={`color${color}${item.id}`}
+                  color={color}
+                  item={item}
+                  setNotes={setNotes}
+                  notes={notes}
+                  togglePalete={togglePalete}
+                />
+              );
             })}
           </ColorsWrapper>
         ) : null}

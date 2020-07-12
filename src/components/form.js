@@ -17,6 +17,11 @@ const CreateNoteForm = styled.form`
   box-shadow: 5px 5px 15px rgba(153, 155, 158, 0.85);
   border-radius: 8px;
   padding: 20px 20px 20px 20px;
+  img {
+    background-color: white;
+    padding: 5px;
+    border-radius: 50%;
+  }
 `;
 
 const FormInput = styled.input`
@@ -145,6 +150,7 @@ export default function NewNoteForm({ setNotes, notes }) {
             {COLORES_KEYS.map((color) => {
               return (
                 <ColorCircle
+                  key={`ColorCircle${color}${Math.random()}`}
                   color={color}
                   formData={formData}
                   setFormData={setFormData}

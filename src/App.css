@@ -18,11 +18,6 @@ body {
   height: 100%;
 }
 
-main {
-  display: flex;
-  min-width: auto;
-}
-
 .active {
   background: #999b9e;
 }
