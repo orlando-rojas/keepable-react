@@ -38,7 +38,7 @@ export const NavItem = styled.li`
   cursor: pointer;
 `;
 
-export const NavItemText = styled.li`
+export const NavItemText = styled.span`
   font-weight: normal;
   font-size: 18px;
   line-height: 20px;

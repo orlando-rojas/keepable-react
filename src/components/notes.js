@@ -86,7 +86,7 @@ export default function NotesList({ section, notes, setNotes }) {
     <NotesContainer>
       {notes.map((note) =>
         typeof note.deleted_at === typeof section ? (
-          <Note item={note} setNotes={setNotes} notes={notes} />
+          <Note key={note.id} item={note} setNotes={setNotes} notes={notes} />
         ) : null
       )}
     </NotesContainer>
@@ -136,7 +136,7 @@ function Note({ item, setNotes, notes }) {
   return (
     <Card
       css={css`
-        background-color: ${item.color};
+        background-color: ${COLORES[item.color]};
       `}
     >
       <div>
