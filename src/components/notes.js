@@ -147,7 +147,7 @@ function Note({ item, setNotes, notes }) {
         {showPalete ? (
           < ColorsWrapper>
             {COLORES_KEYS.map((color) => {
-              return <NoteCircle color={color} item={item} setNotes={setNotes} notes={notes} togglePalete={togglePalete}/>;
+              return <NoteCircle key={Date.now()} color={color} item={item} setNotes={setNotes} notes={notes} togglePalete={togglePalete}/>;
             })}
           </ ColorsWrapper>
         ) : null}
