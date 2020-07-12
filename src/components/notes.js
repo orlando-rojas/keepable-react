@@ -147,7 +147,7 @@ function Note({ item, setNotes, notes }) {
         {showPalete ? (
           < ColorsWrapper>
             {COLORES_KEYS.map((color) => {
-              return <NoteCircle color={color} item={item} setNotes={setNotes} notes={notes}/>;
+              return <NoteCircle color={color} item={item} setNotes={setNotes} notes={notes} togglePalete={togglePalete}/>;
             })}
           </ ColorsWrapper>
         ) : null}
@@ -169,7 +169,7 @@ function Note({ item, setNotes, notes }) {
   );
 }
 
-function NoteCircle({ color, setNotes, item, notes }) {
+function NoteCircle({ color, setNotes, item, notes, togglePalete }) {
   
   async function handleChangeColor() {
     try {
@@ -182,6 +182,7 @@ function NoteCircle({ color, setNotes, item, notes }) {
         }
       });
       setNotes(newNotes);
+      togglePalete();
       //getNotes().then((notes) => setNotes(notes))
     } catch (e) {
       alert("There as a problem deleting the comments. Please try again");
